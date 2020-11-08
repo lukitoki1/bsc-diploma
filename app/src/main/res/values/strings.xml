@@ -5,6 +5,7 @@
     <string name="back">Back</string>
     <string name="reject">Reject</string>
     <string name="accept">Accept</string>
+    <string name="from">From</string>
     <string name="to">To</string>
 
     <!-- Content descriptions -->
@@ -12,6 +13,7 @@
     <string name="file_icon">File icon</string>
     <string name="no_text_icon">no_text_icon</string>
     <string name="languages_dropdown">Languages dropdown</string>
+    <string name="result_image">Result image</string>
 
     <!-- Menus -->
     <string name="main_menu_take_photo">Take Photo</string>
