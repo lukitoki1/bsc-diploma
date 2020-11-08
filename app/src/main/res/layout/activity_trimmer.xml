@@ -6,6 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TrimmerActivity">
 
+    <com.theartofdev.edmodo.cropper.CropImageView
+        android:id="@+id/trimmer_crop_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/trimmer_bottom_navigation"
         style="@style/Widget.MaterialComponents.BottomNavigationView"
