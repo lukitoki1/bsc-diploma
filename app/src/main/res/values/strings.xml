@@ -1,3 +1,25 @@
 <resources>
+    <!-- Commons -->
     <string name="app_name">Polyglot</string>
+    <string name="allow">Allow</string>
+    <string name="back">Back</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
+    <string name="to">To</string>
+
+    <!-- Content descriptions -->
+    <string name="camera_icon">Camera icon</string>
+    <string name="file_icon">File icon</string>
+    <string name="no_text_icon">no_text_icon</string>
+    <string name="languages_dropdown">Languages dropdown</string>
+
+    <!-- Menus -->
+    <string name="main_menu_take_photo">Take Photo</string>
+    <string name="main_menu_choose_file">Choose File</string>
+    <string name="results_menu_new_translation">New translation</string>
+
+    <!-- Messages  -->
+    <string name="camera_permission_message">Allow Polyglot to use the on-device camera</string>
+    <string name="storage_permission_message">Allow Polyglot to read the on-device storage</string>
+    <string name="no_results_message">Could not recognize any text</string>
 </resources>
