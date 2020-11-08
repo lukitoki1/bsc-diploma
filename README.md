@@ -1,2 +1,2 @@
 # diploma
-Repository for code and docummentation of diploma project.
+Repository for code and documentation of diploma project.
