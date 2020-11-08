@@ -16,7 +16,7 @@
         android:theme="?attr/actionBarTheme">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip"
+            android:id="@+id/results_toolbar_to_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/to" />
@@ -26,26 +26,35 @@
             android:layout_height="match_parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/results_language_dropdown"
+            android:id="@+id/results_toolbar_language_dropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp">
 
             <AutoCompleteTextView
-                android:id="@+id/results_language_dropdown_list"
+                android:id="@+id/results_toolbar_language_dropdown_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/languages_dropdown" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/results_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/results_bottom_navigation"
         style="@style/Widget.MaterialComponents.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/results_bottom_navigation_menu" />
+        app:menu="@menu/results_bottom_navigation_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </LinearLayout>
