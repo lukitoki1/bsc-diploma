@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 class CameraPermissionActivity : AppCompatActivity() {
     private val cameraPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions: Map<String, Boolean> ->
+            if (!permissions.values.contains(false)) {
                 startCamera()
             }
         }
@@ -22,7 +22,7 @@ class CameraPermissionActivity : AppCompatActivity() {
 
     fun onStartCameraButtonClick(view: View) {
         cameraPermissionLauncher.launch(
-            CAMERA_PERMISSION
+            arrayOf(CAMERA_PERMISSION, WRITE_STORAGE_PERMISSION)
         )
     }
 

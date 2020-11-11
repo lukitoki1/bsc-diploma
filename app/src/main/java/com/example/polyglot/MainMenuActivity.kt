@@ -3,30 +3,39 @@ package com.example.polyglot
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
+import java.text.DateFormat.getDateTimeInstance
+import java.util.*
 
 const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 const val READ_STORAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
-const val PHOTO_PREVIEW = "com.example.polyglot.PHOTO_PREVIEW"
+const val WRITE_STORAGE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+const val PHOTO_URI = "com.example.polyglot.PHOTO_PREVIEW"
 
 class MainMenuActivity : AppCompatActivity() {
     private var pm: PackageManager? = null
     private var hasCamera: Boolean = false
+    private var photoURI: Uri? = null
 
     private val cameraPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                startCamera()
-            } else {
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions: Map<String, Boolean> ->
+            if (permissions.values.contains(false)) {
                 startCameraPermission()
+            } else {
+                startCamera()
             }
         }
 
@@ -42,8 +51,15 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
     private val takePicture =
-        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
-            startActivity(Intent(this, TrimmerActivity::class.java).putExtra(PHOTO_PREVIEW, bitmap))
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success && photoURI != null) {
+                startActivity(
+                    Intent(this, TrimmerActivity::class.java).putExtra(
+                        PHOTO_URI,
+                        photoURI
+                    )
+                )
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +81,7 @@ class MainMenuActivity : AppCompatActivity() {
         } else if (shouldShowRequestPermissionRationale(CAMERA_PERMISSION)) {
             startCameraPermission()
         } else {
-            cameraPermissionLauncher.launch(CAMERA_PERMISSION)
+            cameraPermissionLauncher.launch(arrayOf(CAMERA_PERMISSION, WRITE_STORAGE_PERMISSION))
         }
     }
 
@@ -85,7 +101,19 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        takePicture.launch(null)
+        val timeStamp: String = getDateTimeInstance().format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        Log.d("FILES", storageDir?.path ?: "")
+        val file = File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        )
+        val fileURI =
+            FileProvider.getUriForFile(this, "com.example.polyglot.fileprovider", file).also {
+                photoURI = it
+            }
+        takePicture.launch(fileURI)
     }
 
     private fun startCameraPermission() {
