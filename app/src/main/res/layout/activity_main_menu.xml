@@ -13,6 +13,7 @@
         android:id="@+id/main_menu_take_photo_button"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:onClick="onStartCameraButtonClick"
         android:text="@string/main_menu_take_photo"
         app:icon="@drawable/ic_outline_photo_camera_24"
         app:iconGravity="textStart" />
@@ -21,6 +22,7 @@
         android:id="@+id/main_menu_choose_file_button"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:onClick="onStartFilePickerButtonClick"
         android:text="@string/main_menu_choose_file"
         app:icon="@drawable/ic_outline_insert_drive_file_24"
         app:iconGravity="textStart" />
