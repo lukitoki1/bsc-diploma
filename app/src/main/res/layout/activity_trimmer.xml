@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TrimmerActivity">
 
     <com.theartofdev.edmodo.cropper.CropImageView
@@ -13,11 +13,32 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/trimmer_bottom_navigation"
-        style="@style/Widget.MaterialComponents.BottomNavigationView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/trimmer_bottom_navigation_menu" />
+        android:gravity="fill_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/trimmer_reject_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/reject"
+            app:icon="@drawable/ic_outline_clear_24"
+            app:iconGravity="textStart" />
+
+        <Button
+            android:id="@+id/trimmer_accept_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/accept"
+            app:icon="@drawable/ic_baseline_check_24"
+            app:iconGravity="textStart" />
+
+    </LinearLayout>
 
 </LinearLayout>
