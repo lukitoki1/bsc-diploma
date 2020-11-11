@@ -53,6 +53,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:text="@string/results_menu_new_translation"
         app:icon="@drawable/ic_baseline_camera_enhance_24"
         app:iconGravity="textStart" />

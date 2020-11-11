@@ -1,6 +1,6 @@
 package com.example.polyglot
 
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -13,8 +13,8 @@ class TrimmerActivity : AppCompatActivity() {
     }
 
     private fun setImage() {
-        val bitmap = intent.getParcelableExtra<Bitmap>(PHOTO_PREVIEW)
+        val imageURI = intent.getParcelableExtra<Uri>(PHOTO_URI)
         val trimmerCropView = findViewById<CropImageView>(R.id.trimmer_crop_view)
-        trimmerCropView.setImageBitmap(bitmap)
+        trimmerCropView.setImageUriAsync(imageURI)
     }
 }
