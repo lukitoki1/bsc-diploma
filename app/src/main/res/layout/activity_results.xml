@@ -48,13 +48,13 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/results_bottom_navigation"
-        style="@style/Widget.MaterialComponents.BottomNavigationView"
+    <Button
+        android:id="@+id/results_new_translation_button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/results_bottom_navigation_menu">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        android:text="@string/results_menu_new_translation"
+        app:icon="@drawable/ic_baseline_camera_enhance_24"
+        app:iconGravity="textStart" />
 
 </LinearLayout>
