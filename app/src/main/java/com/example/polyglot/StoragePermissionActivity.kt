@@ -20,7 +20,7 @@ class StoragePermissionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_storage_permission)
     }
 
-    fun startFilePicker(view: View) {
+    fun onStartFilePickerButtonClick(view: View) {
         storagePermissionLauncher.launch(READ_STORAGE_PERMISSION)
     }
 

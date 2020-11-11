@@ -20,7 +20,7 @@ class CameraPermissionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_camera_permission)
     }
 
-    fun startCamera(view: View) {
+    fun onStartCameraButtonClick(view: View) {
         cameraPermissionLauncher.launch(
             CAMERA_PERMISSION
         )
