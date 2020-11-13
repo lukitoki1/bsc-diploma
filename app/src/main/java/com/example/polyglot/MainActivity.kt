@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private fun startMainMenu() {
         Timer().schedule(1000) {
             startActivity(Intent(applicationContext, MainMenuActivity::class.java))
+            finish()
         }
     }
 }
