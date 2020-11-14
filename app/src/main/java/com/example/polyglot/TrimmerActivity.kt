@@ -2,6 +2,7 @@ package com.example.polyglot
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.theartofdev.edmodo.cropper.CropImageView
 
@@ -10,6 +11,10 @@ class TrimmerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trimmer)
         setImage()
+    }
+
+    fun onRejectButtonClick(view: View) {
+        finish()
     }
 
     private fun setImage() {
