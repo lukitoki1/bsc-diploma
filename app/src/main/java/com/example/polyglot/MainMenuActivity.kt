@@ -51,13 +51,21 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
     private val takePicture =
-        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success && photoURI != null) {
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess && photoURI != null) {
+                Log.d("FILES", "takePicture file URI: $photoURI")
                 startActivity(
-                    Intent(this, TrimmerActivity::class.java).putExtra(
-                        PHOTO_URI,
-                        photoURI
-                    )
+                    Intent(this, TrimmerActivity::class.java).putExtra(PHOTO_URI, photoURI)
+                )
+            }
+        }
+
+    private val chooseFile =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { documentUri ->
+            if (documentUri != null) {
+                Log.d("FILES", "chooseFile file URI: $documentUri")
+                startActivity(
+                    Intent(this, TrimmerActivity::class.java).putExtra(PHOTO_URI, documentUri)
                 )
             }
         }
@@ -103,7 +111,6 @@ class MainMenuActivity : AppCompatActivity() {
     private fun startCamera() {
         val timeStamp: String = getDateTimeInstance().format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        Log.d("FILES", storageDir?.path ?: "")
         val file = File.createTempFile(
             "JPEG_${timeStamp}_",
             ".jpg",
@@ -121,7 +128,7 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun startFilePicker() {
-
+        chooseFile.launch(arrayOf("image/*"))
     }
 
     private fun startStoragePermission() {
