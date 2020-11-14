@@ -12,6 +12,7 @@ class StoragePermissionActivity : AppCompatActivity() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 startFilePicker()
+                finish()
             }
         }
 

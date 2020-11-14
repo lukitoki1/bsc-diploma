@@ -12,6 +12,7 @@ class CameraPermissionActivity : AppCompatActivity() {
         ) { permissions: Map<String, Boolean> ->
             if (!permissions.values.contains(false)) {
                 startCamera()
+                finish()
             }
         }
 
