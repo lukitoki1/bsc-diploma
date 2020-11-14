@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingHorizontal="32dp"
+    android:padding="32dp"
     tools:context=".MainMenuActivity">
 
     <Button
         android:id="@+id/main_menu_take_photo_button"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="96dp"
         android:onClick="onStartCameraButtonClick"
         android:text="@string/main_menu_take_photo"
         app:icon="@drawable/ic_outline_photo_camera_24"
@@ -21,7 +21,7 @@
     <Button
         android:id="@+id/main_menu_choose_file_button"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="96dp"
         android:onClick="onStartFilePickerButtonClick"
         android:text="@string/main_menu_choose_file"
         app:icon="@drawable/ic_outline_insert_drive_file_24"
