@@ -5,23 +5,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import java.io.File
-import java.text.DateFormat.getDateTimeInstance
-import java.util.*
+import createFileUri
+import kotlinx.android.synthetic.main.activity_main_menu.*
 
 const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 const val READ_STORAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
 const val WRITE_STORAGE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
 
-const val PHOTO_URI = "com.example.polyglot.PHOTO_PREVIEW"
+const val PHOTO_URI = "com.example.polyglot.PHOTO_URI"
 
 class MainMenuActivity : AppCompatActivity() {
     private var pm: PackageManager? = null
@@ -109,18 +105,8 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        val timeStamp: String = getDateTimeInstance().format(Date())
-        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val file = File.createTempFile(
-            "JPEG_${timeStamp}_",
-            ".jpg",
-            storageDir
-        )
-        val fileURI =
-            FileProvider.getUriForFile(this, "com.example.polyglot.fileprovider", file).also {
-                photoURI = it
-            }
-        takePicture.launch(fileURI)
+        photoURI = createFileUri(this)
+        takePicture.launch(photoURI)
     }
 
     private fun startCameraPermission() {
@@ -146,8 +132,7 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun toggleStartCameraButtonEnabled() {
-        val takePhotoButton = findViewById<Button>(R.id.main_menu_take_photo_button)
-        takePhotoButton.isEnabled = this.hasCamera
+        main_menu_take_photo_button.isEnabled = this.hasCamera
     }
 
 }

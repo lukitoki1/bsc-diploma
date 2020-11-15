@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.theartofdev.edmodo.cropper.CropImageView
+import createFileUri
 
 class TrimmerActivity : AppCompatActivity() {
     var originalPhotoUri: Uri? = null
+    var croppedPhotoUri: Uri? = null
     var trimmerCropView: CropImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,19 +24,21 @@ class TrimmerActivity : AppCompatActivity() {
     }
 
     fun onAcceptButtonClick(view: View) {
-        trimmerCropView?.getCroppedImageAsync()
+        croppedPhotoUri = createFileUri(this).also {
+            trimmerCropView?.saveCroppedImageAsync(it)
+        }
     }
 
     private fun initialize() {
         originalPhotoUri = intent.getParcelableExtra(PHOTO_URI)
         trimmerCropView = findViewById(R.id.trimmer_crop_view)
         trimmerCropView?.setImageUriAsync(originalPhotoUri)
-        trimmerCropView?.setOnCropImageCompleteListener { _, result -> startResults(result) }
+        trimmerCropView?.setOnCropImageCompleteListener { _, _ -> startResults() }
     }
 
-    private fun startResults(result: CropImageView.CropResult) {
+    private fun startResults() {
         startActivity(
-            Intent(this, ResultsActivity::class.java).putExtra(PHOTO_URI, result.uri)
+            Intent(this, ResultsActivity::class.java).putExtra(PHOTO_URI, croppedPhotoUri)
         )
     }
 }
