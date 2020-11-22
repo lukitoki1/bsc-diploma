@@ -1,4 +1,4 @@
-package com.example.polyglot
+package com.example.polyglot.adapter
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.polyglot.R
 
 data class TextWrapper(val text: String, val languageCode: String)
 
