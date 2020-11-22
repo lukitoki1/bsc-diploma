@@ -10,7 +10,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import createFileUri
+import com.example.polyglot.utils.createFileUri
 import kotlinx.android.synthetic.main.activity_main_menu.*
 
 const val CAMERA_PERMISSION = Manifest.permission.CAMERA

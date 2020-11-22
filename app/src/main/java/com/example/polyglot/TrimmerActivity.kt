@@ -5,8 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.polyglot.utils.createInternalFileUri
 import com.theartofdev.edmodo.cropper.CropImageView
-import createFileUri
 
 class TrimmerActivity : AppCompatActivity() {
     var originalPhotoUri: Uri? = null
@@ -24,7 +24,7 @@ class TrimmerActivity : AppCompatActivity() {
     }
 
     fun onAcceptButtonClick(view: View) {
-        croppedPhotoUri = createFileUri(this).also {
+        croppedPhotoUri = createInternalFileUri(this).also {
             trimmerCropView?.saveCroppedImageAsync(it)
         }
     }
