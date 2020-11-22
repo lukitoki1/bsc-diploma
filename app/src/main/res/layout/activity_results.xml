@@ -8,37 +8,29 @@
     tools:context=".ResultsActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/results_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        android:padding="8dp"
         android:theme="?attr/actionBarTheme">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/results_toolbar_to_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:text="@string/to" />
 
         <Space
             android:layout_width="8dp"
             android:layout_height="match_parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/results_toolbar_language_dropdown"
+        <Spinner
+            android:id="@+id/results_languages_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp">
-
-            <AutoCompleteTextView
-                android:id="@+id/results_toolbar_language_dropdown_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/languages_dropdown" />
-
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -46,6 +38,7 @@
         android:id="@+id/results_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="4dp"
         android:layout_weight="1" />
 
     <Button
@@ -54,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="64dp"
+        android:onClick="onNewTranslationButtonClick"
         android:text="@string/results_menu_new_translation"
         app:icon="@drawable/ic_baseline_camera_enhance_24"
         app:iconGravity="textStart" />

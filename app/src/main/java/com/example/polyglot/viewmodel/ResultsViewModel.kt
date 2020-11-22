@@ -6,6 +6,11 @@ import com.example.polyglot.adapter.Result
 
 class ResultsViewModel : ViewModel() {
     val results: MutableLiveData<ArrayList<Result>> by lazy { MutableLiveData<ArrayList<Result>>() }
+    val targetLanguage: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    fun clearResults() {
+        results.value = ArrayList()
+    }
 
     fun appendResults(result: Result) {
         val currentResults: ArrayList<Result> = results.value ?: ArrayList()

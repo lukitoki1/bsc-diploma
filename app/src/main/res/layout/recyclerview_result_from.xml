@@ -16,6 +16,7 @@
             android:id="@+id/result_from_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:text="@string/from" />
 
         <Space
@@ -34,5 +35,6 @@
         android:id="@+id/result_from_text"
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp" />
 </LinearLayout>

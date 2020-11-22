@@ -3,12 +3,16 @@ package com.example.polyglot.utils
 import android.content.Context
 import android.net.Uri
 import com.google.android.gms.tasks.Task
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
+
+const val defaultTargetLanguage = TranslateLanguage.POLISH
+val availableTargetLanguages: List<String> = TranslateLanguage.getAllLanguages()
 
 fun recognizeText(context: Context, photoUri: Uri?): Task<Text>? {
     photoUri ?: return null
