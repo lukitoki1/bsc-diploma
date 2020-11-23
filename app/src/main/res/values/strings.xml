@@ -24,4 +24,5 @@
     <string name="camera_permission_message">Allow Polyglot to use the on-device camera</string>
     <string name="storage_permission_message">Allow Polyglot to read the on-device storage</string>
     <string name="no_results_message">Could not recognize any text</string>
+    <string name="analyzing_image">Analyzing image</string>
 </resources>

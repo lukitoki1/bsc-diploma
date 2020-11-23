@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.graphics.Rect
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -18,16 +17,17 @@ import com.example.polyglot.adapter.ResultsAdapter
 import com.example.polyglot.adapter.TextWrapper
 import com.example.polyglot.utils.*
 import com.example.polyglot.viewmodel.ResultsViewModel
-import com.google.mlkit.vision.text.Text
 import kotlinx.android.synthetic.main.activity_results.*
+import kotlinx.android.synthetic.main.layout_results_list.*
 
+private enum class ResultsViewFlipper(val value: Int) {
+    EMPTY(1),
+    LOADED(2)
+}
 
 class ResultsActivity : AppCompatActivity() {
     private lateinit var resultsAdapter: ResultsAdapter
-    private lateinit var photoUri: Uri
-    private lateinit var photo: Bitmap
 
-    private var text: Text? = null
     private val model: ResultsViewModel by viewModels()
 
     inner class ResultLanguageSelectListener : AdapterView.OnItemSelectedListener {
@@ -43,12 +43,9 @@ class ResultsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_results)
 
-        initPhoto()
-        initResultsAdapter()
-        initLanguagesAdapter()
-        initRecognition()
-
-        recognizeText()
+        init()
+        observe()
+        setPhotoUri()
     }
 
     fun onNewTranslationButtonClick(view: View) {
@@ -56,25 +53,25 @@ class ResultsActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun initPhoto() {
-        photoUri = intent.getParcelableExtra(PHOTO_URI)!!
-        photo = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, photoUri))
+    private fun setPhotoUri() {
+        model.photoUri.value = intent.getParcelableExtra(PHOTO_URI)!!
+    }
+
+    private fun init() {
+        initResultsAdapter()
+        initLanguagesAdapter()
     }
 
     private fun initResultsAdapter() {
         resultsAdapter = ResultsAdapter(ArrayList())
         results_recycler_view.layoutManager = LinearLayoutManager(this)
         results_recycler_view.adapter = resultsAdapter
-
-        model.results.observe(
-            this,
-            Observer<ArrayList<Result>> { newResults -> resultsAdapter.update(newResults) })
     }
 
     private fun initLanguagesAdapter() {
         val languagesAdapter: ArrayAdapter<String> = ArrayAdapter(
             this,
-            R.layout.listitem_language_dropdown,
+            R.layout.item_language,
             availableTargetLanguages
         )
         results_languages_spinner.adapter = languagesAdapter
@@ -86,23 +83,54 @@ class ResultsActivity : AppCompatActivity() {
         )
     }
 
-    private fun initRecognition() {
-        model.targetLanguage.observe(this, Observer { newTargetLanguage ->
+    private fun observe() {
+        observePhotoUri()
+        observeText()
+        observeResults()
+        observeTargetLanguage()
+    }
+
+    private fun observePhotoUri() {
+        model.photoUri.observe(
+            this,
+            Observer { uri ->
+                model.photo.value =
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
+                recognizeText(this, uri)?.addOnSuccessListener { text ->
+                    model.text.value = text
+                }
+            })
+    }
+
+    private fun observeText() {
+        model.text.observe(this, Observer {
             showResults()
         })
     }
 
-    private fun recognizeText() {
-        recognizeText(this, photoUri)?.addOnSuccessListener { text ->
-            this.text = text
-            showResults()
-        }
+    private fun observeResults() {
+        model.results.observe(
+            this,
+            Observer {
+                when (it.size) {
+                    0 -> results_view_flipper.displayedChild = ResultsViewFlipper.EMPTY.value
+                    else -> results_view_flipper.displayedChild = ResultsViewFlipper.LOADED.value
+                }
+                resultsAdapter.update(it)
+            })
+    }
+
+    private fun observeTargetLanguage() {
+        model.targetLanguage.observe(this, Observer { showResults() })
     }
 
     private fun showResults() {
         model.clearResults()
 
-        text?.also {
+        val photo = model.photo.value ?: return
+        val targetLanguage = model.targetLanguage.value ?: return
+
+        model.text.value?.also {
             for (textBlock in it.textBlocks) {
                 val sourceTextWrapper = TextWrapper(
                     textBlock.text,
@@ -110,18 +138,22 @@ class ResultsActivity : AppCompatActivity() {
                 )
 
                 val box: Rect? = textBlock.boundingBox
-                val photo = box?.let {
-                    Bitmap.createBitmap(this.photo, box.left, box.top, box.width(), box.height())
+                val sourceTextPhoto = box?.let {
+                    try {
+                        Bitmap.createBitmap(photo, box.left, box.top, box.width(), box.height())
+                    } catch (e: IllegalArgumentException) {
+                        e.printStackTrace()
+                        null
+                    }
                 }
 
                 val sourceLanguage = textBlock.recognizedLanguage
-                val targetLanguage = model.targetLanguage.value ?: return
 
                 downloadTranslatorModel(sourceLanguage, targetLanguage).addOnSuccessListener {
                     val sourceText = textBlock.text.replace("\n", " ")
                     translateText(sourceText, sourceLanguage, targetLanguage).addOnSuccessListener {
                         val targetTextWrapper = TextWrapper(it, targetLanguage)
-                        val result = Result(sourceTextWrapper, targetTextWrapper, photo)
+                        val result = Result(sourceTextWrapper, targetTextWrapper, sourceTextPhoto)
                         model.appendResults(result)
                     }
                 }

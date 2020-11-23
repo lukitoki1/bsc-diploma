@@ -20,9 +20,9 @@
             android:contentDescription="@string/result_image"
             android:scaleType="fitXY" />
 
-        <include layout="@layout/recyclerview_result_from" />
+        <include layout="@layout/item_result_from" />
 
-        <include layout="@layout/recyclerview_result_to" />
+        <include layout="@layout/item_result_to" />
 
     </LinearLayout>
 

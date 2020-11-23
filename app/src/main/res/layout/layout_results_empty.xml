@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="24dp"
     android:paddingVertical="192dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".NoResultsActivity">
+    tools:context=".ResultsActivity">
 
     <ImageView
         android:id="@+id/no_results_icon"
@@ -38,6 +38,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onNewTranslationButtonClick"
         android:text="@string/back" />
 
 </LinearLayout>

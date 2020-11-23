@@ -17,17 +17,17 @@ data class Result(val sourceText: TextWrapper, val targetText: TextWrapper?, val
 class ResultsAdapter(private val results: ArrayList<Result>) :
     RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var resultImage = view.findViewById<ImageView>(R.id.result_image)
-        var resultFromLanguage = view.findViewById<TextView>(R.id.result_from_language)
-        var resultFromText = view.findViewById<TextView>(R.id.result_from_text)
-        var resultToLayout = view.findViewById<LinearLayout>(R.id.result_to_layout)
-        var resultToLanguage = view.findViewById<TextView>(R.id.result_to_language)
-        var resultToText = view.findViewById<TextView>(R.id.result_to_text)
+        var resultImage: ImageView = view.findViewById(R.id.result_image)
+        var resultFromLanguage: TextView = view.findViewById(R.id.result_from_language)
+        var resultFromText: TextView = view.findViewById(R.id.result_from_text)
+        var resultToLayout: LinearLayout = view.findViewById(R.id.result_to_layout)
+        var resultToLanguage: TextView = view.findViewById(R.id.result_to_language)
+        var resultToText: TextView = view.findViewById(R.id.result_to_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_result, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_result, parent, false)
         )
     }
 
