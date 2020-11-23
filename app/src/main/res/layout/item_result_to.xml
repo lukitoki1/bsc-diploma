@@ -1,40 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/result_to_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
-    android:orientation="vertical"
-    android:paddingHorizontal="8dp">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/result_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/result_to_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:clickable="false"
             android:text="@string/to" />
 
         <Space
-            android:layout_width="8dp"
+            android:layout_width="4dp"
             android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/result_to_language"
-            android:layout_width="match_parent"
+            android:id="@+id/result_message_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/result_to_text"
-        style="@style/TextAppearance.MaterialComponents.Body1"
+    <LinearLayout
+        android:id="@+id/result_to_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp" />
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/result_to_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:text="@string/to" />
+
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/result_to_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/result_to_text"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

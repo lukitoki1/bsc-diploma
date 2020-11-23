@@ -25,4 +25,8 @@
     <string name="storage_permission_message">Allow Polyglot to read the on-device storage</string>
     <string name="no_results_message">Could not recognize any text</string>
     <string name="analyzing_image">Analyzing image</string>
+
+    <string name="result_state_initial">Initializing translation</string>
+    <string name="result_state_fetching_model">Fetching translation model</string>
+    <string name="result_state_translating">Translating</string>
 </resources>
