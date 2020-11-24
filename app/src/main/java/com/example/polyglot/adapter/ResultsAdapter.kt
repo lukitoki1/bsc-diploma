@@ -1,5 +1,7 @@
 package com.example.polyglot.adapter
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polyglot.R
@@ -28,7 +31,7 @@ class ResultsAdapter(
         NO_TARGET(2)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
         val resultImage: ImageView = view.findViewById(R.id.result_image)
 
         val resultFromLanguage: TextView = view.findViewById(R.id.result_from_language)
@@ -38,6 +41,21 @@ class ResultsAdapter(
         val resultToLanguage: TextView = view.findViewById(R.id.result_to_language)
         val resultToText: TextView = view.findViewById(R.id.result_to_text)
         val resultToMessage: TextView = view.findViewById(R.id.result_message_text)
+
+        init {
+            itemView.setOnLongClickListener(this)
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(
+                context.getString(R.string.app_name),
+                "${resultFromText.text}\n${resultToText.text}"
+            )
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(v?.context, "Result copied to clipboard", Toast.LENGTH_SHORT).show()
+            return true
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

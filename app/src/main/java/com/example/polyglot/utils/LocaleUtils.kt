@@ -6,6 +6,8 @@ import java.util.*
 
 abstract class LocaleUtils {
     companion object {
+        const val appLanguage = "en"
+
         fun buildDescriptions(context: Context, languageCodes: List<String>) =
             languageCodes.map { buildDescription(context, it) }
 
@@ -13,7 +15,7 @@ abstract class LocaleUtils {
             if (languageCode == undefinedLanguage) {
                 return context.getString(R.string.unrecognized)
             }
-            return Locale(languageCode).displayName
+            return Locale(languageCode).getDisplayName(Locale(appLanguage))
         }
     }
 }
