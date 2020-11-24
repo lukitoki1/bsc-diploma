@@ -18,11 +18,11 @@
         android:roundIcon="@mipmap/ic_app_icon_asset_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FilePickerActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".NoResultsActivity" />
         <activity android:name=".ResultsActivity" />
         <activity android:name=".TrimmerActivity" />
-        <activity android:name=".StoragePermissionActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity
             android:name=".MainActivity"

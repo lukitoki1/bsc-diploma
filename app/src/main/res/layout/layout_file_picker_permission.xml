@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="24dp"
     android:paddingVertical="192dp"
-    tools:context=".StoragePermissionActivity">
+    tools:context=".FilePickerActivity">
 
     <ImageView
         android:id="@+id/storage_permission_icon"
@@ -22,7 +22,6 @@
         android:layout_height="24dp" />
 
     <TextView
-        android:id="@+id/storage_permission_message"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +37,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onStartFilePickerButtonClick"
+        android:onClick="onGrantPermissionButtonClick"
         android:text="@string/allow" />
 
 </LinearLayout>
