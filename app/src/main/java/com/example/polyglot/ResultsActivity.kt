@@ -18,12 +18,12 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.android.synthetic.main.activity_results.*
 import kotlinx.android.synthetic.main.layout_results_list.*
 
-private enum class FlipperViews(val value: Int) {
-    EMPTY(1),
-    LOADED(2)
-}
-
 class ResultsActivity : AppCompatActivity() {
+    private enum class Views(val value: Int) {
+        EMPTY(1),
+        LOADED(2)
+    }
+
     private lateinit var resultsAdapter: ResultsAdapter
     private val model: ResultsViewModel by viewModels()
 
@@ -94,9 +94,9 @@ class ResultsActivity : AppCompatActivity() {
     private fun observeText() {
         model.text.observe(this, Observer {
             when (it.textBlocks.size) {
-                0 -> results_view_flipper.displayedChild = FlipperViews.EMPTY.value
+                0 -> results_view_flipper.displayedChild = Views.EMPTY.value
                 else -> {
-                    results_view_flipper.displayedChild = FlipperViews.LOADED.value
+                    results_view_flipper.displayedChild = Views.LOADED.value
                     val photo = model.photo.value ?: return@Observer
                     resultsAdapter.init(it, photo)
                     translateText()

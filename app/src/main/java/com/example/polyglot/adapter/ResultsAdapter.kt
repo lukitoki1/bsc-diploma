@@ -17,17 +17,17 @@ import com.example.polyglot.viewmodel.ResultState
 import com.example.polyglot.viewmodel.TextData
 import com.google.mlkit.vision.text.Text
 
-private enum class FlipperViews(val value: Int) {
-    MESSAGE(0),
-    TARGET(1),
-    NO_TARGET(2)
-}
-
 class ResultsAdapter(
     private val context: Context,
     private val results: ArrayList<Result> = ArrayList()
 ) :
     RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
+    private enum class Views(val value: Int) {
+        MESSAGE(0),
+        TARGET(1),
+        NO_TARGET(2)
+    }
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val resultImage: ImageView = view.findViewById(R.id.result_image)
 
@@ -119,17 +119,17 @@ class ResultsAdapter(
     }
 
     private fun setViewHolderMessage(holder: ViewHolder, message: String) {
-        holder.resultToViewFlipper.displayedChild = FlipperViews.MESSAGE.value
+        holder.resultToViewFlipper.displayedChild = Views.MESSAGE.value
         holder.resultToMessage.text = message
     }
 
     private fun setViewHolderTarget(holder: ViewHolder, target: TextData?) {
-        holder.resultToViewFlipper.displayedChild = FlipperViews.TARGET.value
+        holder.resultToViewFlipper.displayedChild = Views.TARGET.value
         holder.resultToLanguage.text = target?.language?.let { LocaleUtils.buildDescription(context, target.language) }
         holder.resultToText.text = target?.text
     }
 
     private fun setViewHolderNoTarget(holder: ViewHolder) {
-        holder.resultToViewFlipper.displayedChild = FlipperViews.NO_TARGET.value
+        holder.resultToViewFlipper.displayedChild = Views.NO_TARGET.value
     }
 }
