@@ -14,10 +14,11 @@ import com.example.polyglot.adapter.ResultsAdapter
 import com.example.polyglot.utils.*
 import com.example.polyglot.viewmodel.ResultsViewModel
 import com.example.polyglot.viewmodel.TextData
+import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.android.synthetic.main.activity_results.*
 import kotlinx.android.synthetic.main.layout_results_list.*
 
-private enum class ViewFlipper(val value: Int) {
+private enum class FlipperViews(val value: Int) {
     EMPTY(1),
     LOADED(2)
 }
@@ -32,7 +33,7 @@ class ResultsActivity : AppCompatActivity() {
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            model.targetLanguage.value = availableTargetLanguages[position]
+            model.targetLanguage.value = availableLanguages[position]
         }
     }
 
@@ -69,15 +70,11 @@ class ResultsActivity : AppCompatActivity() {
         val languagesAdapter: ArrayAdapter<String> = ArrayAdapter(
             this,
             R.layout.item_language,
-            availableTargetLanguages
+            availableLanguages
         )
         results_languages_spinner.adapter = languagesAdapter
         results_languages_spinner.onItemSelectedListener = ResultLanguageSelectListener()
-        results_languages_spinner.setSelection(
-            availableTargetLanguages.indexOf(
-                defaultTargetLanguage
-            )
-        )
+        results_languages_spinner.setSelection(availableLanguages.indexOf(TranslateLanguage.POLISH))
     }
 
     private fun observe() {
@@ -101,9 +98,9 @@ class ResultsActivity : AppCompatActivity() {
     private fun observeText() {
         model.text.observe(this, Observer {
             when (it.textBlocks.size) {
-                0 -> results_view_flipper.displayedChild = ViewFlipper.EMPTY.value
+                0 -> results_view_flipper.displayedChild = FlipperViews.EMPTY.value
                 else -> {
-                    results_view_flipper.displayedChild = ViewFlipper.LOADED.value
+                    results_view_flipper.displayedChild = FlipperViews.LOADED.value
                     val photo = model.photo.value ?: return@Observer
                     resultsAdapter.init(it, photo)
                     translateText()
@@ -124,17 +121,17 @@ class ResultsActivity : AppCompatActivity() {
         val targetLanguage = model.targetLanguage.value ?: return
 
         for ((i, textBlock) in text.textBlocks.withIndex()) {
+            val sourceLanguage = textBlock.recognizedLanguage
+
+            if (sourceLanguage in arrayOf(targetLanguage, undefinedLanguage)) {
+                resultsAdapter.setStateNoTranslation(i)
+                continue
+            }
+
             resultsAdapter.setStateFetchingModel(i)
-            downloadTranslatorModel(
-                textBlock.recognizedLanguage,
-                targetLanguage
-            ).addOnSuccessListener {
+            downloadTranslationModel(sourceLanguage, targetLanguage).addOnSuccessListener {
                 resultsAdapter.setStateTranslating(i)
-                translateText(
-                    textBlock.text,
-                    textBlock.recognizedLanguage,
-                    targetLanguage
-                ).addOnSuccessListener {
+                translateText(textBlock.text, sourceLanguage, targetLanguage).addOnSuccessListener {
                     val targetTextData = TextData(it, targetLanguage)
                     resultsAdapter.setStateTranslated(i, targetTextData)
                 }

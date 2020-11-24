@@ -2,19 +2,25 @@ package com.example.polyglot.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ViewFlipper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polyglot.R
+import com.example.polyglot.utils.cropImage
 import com.example.polyglot.viewmodel.Result
 import com.example.polyglot.viewmodel.ResultState
 import com.example.polyglot.viewmodel.TextData
 import com.google.mlkit.vision.text.Text
+
+private enum class FlipperViews(val value: Int) {
+    MESSAGE(0),
+    TARGET(1),
+    NO_TARGET(2)
+}
 
 class ResultsAdapter(
     private val context: Context,
@@ -27,12 +33,10 @@ class ResultsAdapter(
         val resultFromLanguage: TextView = view.findViewById(R.id.result_from_language)
         val resultFromText: TextView = view.findViewById(R.id.result_from_text)
 
-        val resultToLayout: LinearLayout = view.findViewById(R.id.result_to_layout)
+        val resultToViewFlipper: ViewFlipper = view.findViewById(R.id.result_to_view_flipper)
         val resultToLanguage: TextView = view.findViewById(R.id.result_to_language)
         val resultToText: TextView = view.findViewById(R.id.result_to_text)
-
-        val resultMessageLayout: LinearLayout = view.findViewById(R.id.result_message_layout)
-        val resultMessageText: TextView = view.findViewById(R.id.result_message_text)
+        val resultToMessage: TextView = view.findViewById(R.id.result_message_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,27 +53,17 @@ class ResultsAdapter(
         holder.resultFromText.text = result.source.text
 
         when (result.state) {
-            ResultState.INITIAL -> holder.resultMessageText.text =
-                context.getString(R.string.result_state_initial)
-            ResultState.FETCHING_MODEL -> holder.resultMessageText.text =
+            ResultState.INITIAL -> setViewHolderMessage(holder, context.getString(R.string.result_state_initial))
+            ResultState.FETCHING_MODEL -> setViewHolderMessage(
+                holder,
                 context.getString(R.string.result_state_fetching_model)
-            ResultState.TRANSLATING -> holder.resultMessageText.text =
-                context.getText(R.string.result_state_translating)
-            ResultState.TRANSLATED -> {
-                holder.resultToLanguage.text = result.target?.language
-                holder.resultToText.text = result.target?.text
-            }
-        }
-
-        when (result.state) {
-            ResultState.TRANSLATED -> {
-                holder.resultMessageLayout.visibility = View.GONE
-                holder.resultToLayout.visibility = View.VISIBLE
-            }
-            else -> {
-                holder.resultToLayout.visibility = View.GONE
-                holder.resultMessageLayout.visibility = View.VISIBLE
-            }
+            )
+            ResultState.TRANSLATING -> setViewHolderMessage(
+                holder,
+                context.getString(R.string.result_state_translating)
+            )
+            ResultState.TRANSLATED -> setViewHolderTarget(holder, result.target)
+            ResultState.NO_TRANSLATION -> setViewHolderNoTarget(holder)
         }
     }
 
@@ -77,29 +71,12 @@ class ResultsAdapter(
         return results.size
     }
 
-    fun update(results: ArrayList<Result>) {
-        clear()
-        addAll(results)
-    }
-
     fun init(text: Text, photo: Bitmap) {
-        clear()
+        clearAll()
 
         for (textBlock in text.textBlocks) {
-            val sourceTextWrapper = TextData(
-                textBlock.text,
-                textBlock.recognizedLanguage
-            )
-
-            val box: Rect? = textBlock.boundingBox
-            val sourceTextPhoto = box?.let {
-                try {
-                    Bitmap.createBitmap(photo, box.left, box.top, box.width(), box.height())
-                } catch (e: IllegalArgumentException) {
-                    e.printStackTrace()
-                    null
-                }
-            }
+            val sourceTextWrapper = TextData(textBlock.text, textBlock.recognizedLanguage)
+            val sourceTextPhoto = cropImage(photo, textBlock)
             val result = Result(sourceTextPhoto, sourceTextWrapper, null)
             results.add(result)
         }
@@ -130,13 +107,28 @@ class ResultsAdapter(
         notifyItemChanged(position)
     }
 
-    private fun clear() {
+    fun setStateNoTranslation(position: Int) {
+        results[position].state = ResultState.NO_TRANSLATION
+        notifyItemChanged(position)
+    }
+
+    private fun clearAll() {
         results.clear()
         notifyDataSetChanged()
     }
 
-    private fun addAll(results: ArrayList<Result>) {
-        results.addAll(results)
-        notifyDataSetChanged()
+    private fun setViewHolderMessage(holder: ViewHolder, message: String) {
+        holder.resultToViewFlipper.displayedChild = FlipperViews.MESSAGE.value
+        holder.resultToMessage.text = message
+    }
+
+    private fun setViewHolderTarget(holder: ViewHolder, target: TextData?) {
+        holder.resultToViewFlipper.displayedChild = FlipperViews.TARGET.value
+        holder.resultToLanguage.text = target?.language
+        holder.resultToText.text = target?.text
+    }
+
+    private fun setViewHolderNoTarget(holder: ViewHolder) {
+        holder.resultToViewFlipper.displayedChild = FlipperViews.NO_TARGET.value
     }
 }

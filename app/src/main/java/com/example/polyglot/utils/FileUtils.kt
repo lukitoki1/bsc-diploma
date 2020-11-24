@@ -9,25 +9,28 @@ import java.io.File
 import java.text.DateFormat
 import java.util.*
 
-fun createFileUri(context: Context, fileType: String = Environment.DIRECTORY_PICTURES): Uri {
-    val storageDir: File? = context.getExternalFilesDir(fileType)
-    val file = File.createTempFile(
-        createUniqueFilename(),
-        null,
-        storageDir
-    )
-    return FileProvider.getUriForFile(context, "com.example.polyglot.fileprovider", file)
-}
+abstract class FileUtils {
+    companion object {
+        fun createFileUri(context: Context, fileType: String = Environment.DIRECTORY_PICTURES): Uri {
+            val storageDir: File? = context.getExternalFilesDir(fileType)
+            val file = File.createTempFile(
+                createUniqueFilename(),
+                null,
+                storageDir
+            )
+            return FileProvider.getUriForFile(context, "com.example.polyglot.fileprovider", file)
+        }
 
-fun createInternalFileUri(context: Context): Uri {
-    return File.createTempFile(
-        createUniqueFilename(),
-        null,
-        context.cacheDir
-    ).toUri()
-}
+        fun createInternalFileUri(context: Context): Uri {
+            return File.createTempFile(
+                createUniqueFilename(),
+                null,
+                context.cacheDir
+            ).toUri()
+        }
 
-private fun createUniqueFilename(): String {
-    val timeStamp: String = DateFormat.getDateTimeInstance().format(Date())
-    return "${timeStamp}_"
+        private fun createUniqueFilename(): String {
+            return DateFormat.getDateTimeInstance().format(Date())
+        }
+    }
 }

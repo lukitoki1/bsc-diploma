@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.mlkit.vision.text.Text
 
 enum class ResultState {
-    INITIAL, FETCHING_MODEL, TRANSLATING, TRANSLATED
+    INITIAL, FETCHING_MODEL, TRANSLATING, TRANSLATED, NO_TRANSLATION
 }
 
 data class TextData(val text: String, val language: String)
@@ -19,10 +19,8 @@ data class Result(
 )
 
 class ResultsViewModel : ViewModel() {
-    val targetLanguage: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val photoUri: MutableLiveData<Uri> by lazy { MutableLiveData<Uri>() }
     val photo: MutableLiveData<Bitmap> by lazy { MutableLiveData<Bitmap>() }
     val text: MutableLiveData<Text> by lazy { MutableLiveData<Text>() }
-
-
+    val targetLanguage: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 }
