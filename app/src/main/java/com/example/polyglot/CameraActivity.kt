@@ -34,6 +34,7 @@ class CameraActivity : AppCompatActivity() {
                 startActivity(
                     Intent(this, TrimmerActivity::class.java).putExtra(PHOTO_URI, photoURI)
                 )
+                finish()
             }
         }
 

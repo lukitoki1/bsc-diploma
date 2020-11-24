@@ -32,6 +32,7 @@ class FilePickerActivity : AppCompatActivity() {
                 startActivity(
                     Intent(this, TrimmerActivity::class.java).putExtra(PHOTO_URI, documentUri)
                 )
+                finish()
             }
         }
 
