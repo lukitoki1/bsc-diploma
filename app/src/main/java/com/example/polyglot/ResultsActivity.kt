@@ -25,7 +25,6 @@ private enum class FlipperViews(val value: Int) {
 
 class ResultsActivity : AppCompatActivity() {
     private lateinit var resultsAdapter: ResultsAdapter
-
     private val model: ResultsViewModel by viewModels()
 
     inner class ResultLanguageSelectListener : AdapterView.OnItemSelectedListener {
@@ -67,11 +66,8 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun initLanguagesAdapter() {
-        val languagesAdapter: ArrayAdapter<String> = ArrayAdapter(
-            this,
-            R.layout.item_language,
-            availableLanguages
-        )
+        val languagesDescriptions = LocaleUtils.buildDescriptions(this, availableLanguages)
+        val languagesAdapter: ArrayAdapter<String> = ArrayAdapter(this, R.layout.item_language, languagesDescriptions)
         results_languages_spinner.adapter = languagesAdapter
         results_languages_spinner.onItemSelectedListener = ResultLanguageSelectListener()
         results_languages_spinner.setSelection(availableLanguages.indexOf(TranslateLanguage.POLISH))

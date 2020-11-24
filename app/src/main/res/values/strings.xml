@@ -7,6 +7,7 @@
     <string name="accept">Accept</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="unrecognized">Unrecognized</string>
 
     <!-- Content descriptions -->
     <string name="camera_icon">Camera icon</string>

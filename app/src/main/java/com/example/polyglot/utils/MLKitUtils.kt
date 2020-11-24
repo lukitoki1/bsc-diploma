@@ -14,7 +14,6 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 
 const val undefinedLanguage = "und"
-
 val availableLanguages: List<String> = TranslateLanguage.getAllLanguages()
 
 fun recognizeText(context: Context, photoUri: Uri?): Task<Text>? {

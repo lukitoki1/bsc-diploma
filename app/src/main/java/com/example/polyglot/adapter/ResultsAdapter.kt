@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polyglot.R
+import com.example.polyglot.utils.LocaleUtils
 import com.example.polyglot.utils.cropImage
 import com.example.polyglot.viewmodel.Result
 import com.example.polyglot.viewmodel.ResultState
@@ -49,7 +50,7 @@ class ResultsAdapter(
         val result = results[position]
 
         holder.resultImage.setImageBitmap(result.photo)
-        holder.resultFromLanguage.text = result.source.language
+        holder.resultFromLanguage.text = LocaleUtils.buildDescription(context, result.source.language)
         holder.resultFromText.text = result.source.text
 
         when (result.state) {
@@ -124,7 +125,7 @@ class ResultsAdapter(
 
     private fun setViewHolderTarget(holder: ViewHolder, target: TextData?) {
         holder.resultToViewFlipper.displayedChild = FlipperViews.TARGET.value
-        holder.resultToLanguage.text = target?.language
+        holder.resultToLanguage.text = target?.language?.let { LocaleUtils.buildDescription(context, target.language) }
         holder.resultToText.text = target?.text
     }
 
