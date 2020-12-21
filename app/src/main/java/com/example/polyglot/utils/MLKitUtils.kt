@@ -24,6 +24,14 @@ fun recognizeText(context: Context, photoUri: Uri?): Task<Text>? {
     return recognizer.process(image)
 }
 
+fun recognizeText(photoBitmap: Bitmap?): Task<Text>? {
+    photoBitmap ?: return null
+
+    val image = InputImage.fromBitmap(photoBitmap, 0)
+    val recognizer = TextRecognition.getClient()
+    return recognizer.process(image)
+}
+
 fun translateText(text: String, sourceLanguage: String, targetLanguage: String): Task<String> {
     val translator = buildTranslator(sourceLanguage, targetLanguage)
     return translator.translate(text).addOnCompleteListener { translator.close() }
