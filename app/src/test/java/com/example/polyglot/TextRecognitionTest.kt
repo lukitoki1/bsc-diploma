@@ -1,6 +1,7 @@
 package com.example.polyglot
 
 import android.graphics.BitmapFactory
+import com.example.polyglot.utils.recognizeText
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -20,6 +21,8 @@ class TextRecognitionTest {
             println(file.name)
             println(bitmap.width)
             println(bitmap.height)
+
+            recognizeText(bitmap)?.addOnSuccessListener { print(it.text) }
         }
     }
 }
