@@ -37,6 +37,22 @@ android {
             includeAndroidResources = true
         }
     }
+
+    android {
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/LICENSE.md'
+            exclude 'META-INF/license.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/NOTICE.md'
+            exclude 'META-INF/notice.txt'
+            exclude 'META-INF/ASL2.0'
+            exclude("META-INF/*.kotlin_module")
+        }
+    }
 }
 
 dependencies {
@@ -54,5 +70,14 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.4'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'org.awaitility:awaitility:4.0.3'
+    androidTestImplementation 'info.debatty:java-string-similarity:2.0.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module('org.hamcrest:hamcrest-core:1.3') with module('org.hamcrest:hamcrest:2.1')
+        substitute module('org.hamcrest:hamcrest-library:1.3') with module('org.hamcrest:hamcrest:2.1')
+    }
 }
