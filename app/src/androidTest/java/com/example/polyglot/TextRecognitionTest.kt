@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.example.polyglot.utils.TaskUtils
 import com.example.polyglot.utils.recognizeText
@@ -17,16 +16,17 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import info.debatty.java.stringsimilarity.*
-import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.junit.Rule
 import java.io.File
 import androidx.test.rule.GrantPermissionRule
+import com.example.polyglot.utils.InputStreamUtils
+import com.example.polyglot.utils.StatUtils
 import java.io.FileOutputStream
 
 const val DEBUG_TAG = "ML_TEST"
 
-private data class TestResult(
+private data class TextRecognitionTestResult(
     val bitmap: Bitmap,
     var name: String = "",
     var expectedText: String = "",
@@ -46,75 +46,76 @@ class TextRecognitionTest {
     )
     private val descriptionFile = "words.txt"
 
-    private lateinit var testContext: Context
+    private lateinit var context: Context
     private lateinit var assetManager: AssetManager
+    private lateinit var cosine: Cosine
+    private lateinit var results: ArrayList<TextRecognitionTestResult>
 
     @get:Rule
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @Before
     fun setUp() {
-        testContext = getInstrumentation().context
-        assetManager = testContext.assets
+        context = getInstrumentation().context
+        assetManager = context.assets
+        cosine = Cosine()
+        results = ArrayList()
     }
 
     @Test
     fun testTextRecognition() {
-        val results = initTestResultsWithBitmaps()
-        constructExpectedText(results)
-        recognizeActualText(results)
-        calculateCosineSimilarity(results)
-        saveResultsToExcel(results)
+        loadBitmaps()
+        loadExpectedText()
+        recognizeActualText()
+        calculateCosineSimilarity()
+        saveResultsToExcel()
     }
 
-    private fun initTestResultsWithBitmaps(): List<TestResult> {
-        val photos = ArrayList<TestResult>()
+    private fun loadBitmaps() {
         val photosFoldersPaths = photosFolders.map { "$filesRoot/$it" }
         for (folderPath in photosFoldersPaths) {
             val photosNames = assetManager.list(folderPath) ?: continue
             for (photoName in photosNames) {
                 val photoPath = "$folderPath/$photoName"
                 val testInput = assetManager.open(photoPath)
-
                 val bitmap = BitmapFactory.decodeStream(testInput)
                 Log.d(DEBUG_TAG, "Decoded photo $photoPath")
-                photos.add(TestResult(bitmap = bitmap, name = photoPath))
+                results.add(TextRecognitionTestResult(bitmap = bitmap, name = photoPath))
             }
         }
-        return photos
     }
 
-    private fun constructExpectedText(results: List<TestResult>) {
+    private fun loadExpectedText() {
         val wordsInput = assetManager.open("$filesRoot/$descriptionFile")
-        val wordsLines = wordsInput.bufferedReader().use { it.readText() }.lines()
+        val wordsLines = InputStreamUtils.readLines(wordsInput)
         for (i in results.indices) {
             val text = wordsLines[i]
             results[i].expectedText = text
-            results[i].expectedMap = this.textToWordMap(text)
+            results[i].expectedMap = StatUtils.countWords(text)
+            Log.d(DEBUG_TAG, "Loaded text: \"$text\"")
         }
     }
 
-    private fun recognizeActualText(results: List<TestResult>) {
+    private fun recognizeActualText() {
         for (i in results.indices) {
             val task = recognizeText(results[i].bitmap)
             await().until(TaskUtils.isTaskComplete(task))
 
             val text = task?.result?.text?.replace("\n", " ")?.replace("\t", " ")?.trim() ?: ""
             results[i].actualText = text
-            results[i].actualMap = this.textToWordMap(text)
+            results[i].actualMap = StatUtils.countWords(text)
 
             Log.d(DEBUG_TAG, "Recognized in photo no. $i: \"${results[i].actualText}\"")
         }
     }
 
-    private fun calculateCosineSimilarity(results: List<TestResult>) {
-        val cosine = Cosine()
+    private fun calculateCosineSimilarity() {
         for (i in results.indices) {
-            results[i].similarity = cosine.similarity(results[i].expectedMap, results[i].actualMap)
+            results[i].similarity = StatUtils.calculateCosine(cosine, results[i].expectedMap, results[i].actualMap)
         }
     }
 
-    private fun saveResultsToExcel(results: List<TestResult>) {
+    private fun saveResultsToExcel() {
         val excelWorkbook = XSSFWorkbook()
         val excelWorksheet = excelWorkbook.createSheet("test_results")
 
@@ -126,12 +127,12 @@ class TextRecognitionTest {
 
         for (i in results.indices) {
             val result = results[i]
-            val row = excelWorksheet.createRow(i + 1)
+            val resultRow = excelWorksheet.createRow(i + 1)
 
-            row.createCell(0).setCellValue(result.name)
-            row.createCell(1).setCellValue(result.expectedText)
-            row.createCell(2).setCellValue(result.actualText)
-            row.createCell(3).setCellValue(result.similarity)
+            resultRow.createCell(0).setCellValue(result.name)
+            resultRow.createCell(1).setCellValue(result.expectedText)
+            resultRow.createCell(2).setCellValue(result.actualText)
+            resultRow.createCell(3).setCellValue(result.similarity)
 
             Log.d(
                 DEBUG_TAG,
@@ -139,18 +140,9 @@ class TextRecognitionTest {
             )
         }
 
-        val file = File(testContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "$filesRoot.xlsx")
+        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "$filesRoot.xlsx")
         val outputStream = FileOutputStream(file)
         excelWorkbook.write(outputStream)
         excelWorkbook.close()
-    }
-
-    private fun textToWordMap(text: String): MutableMap<String, Int> {
-        val wordMap = mutableMapOf<String, Int>().withDefault { 0 }
-        val splitText = text.split(" ")
-        for (word in splitText) {
-            wordMap[word] = wordMap.getValue(word) + 1
-        }
-        return wordMap
     }
 }

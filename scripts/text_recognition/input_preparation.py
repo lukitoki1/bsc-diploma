@@ -24,7 +24,7 @@ def delete_images_without_text():
                 os.remove(f'{dir_name}/{file}')
 
 
-def transform_words_xml():
+def merge_text_by_image():
     images = []
 
     root = ET.parse(WORDS_XML_FILE).getroot()
@@ -45,4 +45,4 @@ def transform_words_xml():
 
 if __name__ == "__main__":
     delete_images_without_text()
-    transform_words_xml()
+    merge_text_by_image()

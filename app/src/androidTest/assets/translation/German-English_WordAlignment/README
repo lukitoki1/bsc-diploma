@@ -1,0 +1,29 @@
+German-English Parallel Corpus for Word Alignment
+Aligned by: Ergun Bicici
+Corpus: Europarl
+Copyright: 2014
+
+
+This parallel corpus is manually word aligned and can be used for training and testing word alignment systems or statistical machine translation systems.
+
+This parallel corpus was used for calculating the word alignment performance of regression based statistical machine translation systems developed as part of my thesis: "The Regression Model of Machine Translation", Ergun Bicici.
+
+Contents:
+test.[de|en]: Input to the word aligner.
+de-en.wa: Word alignments of the sentences in the parallel corpus in GIZA++ format.
+de-en.ref.wa: Word alignments of the sentences in the parallel corpus in a format for calculating alignment error rate (AER).
+
+
+Citation:
+Ergun Biçici. The Regression Model of Machine Translation. PhD thesis, Koç University, 2011. Note: Supervisor: Deniz Yuret.
+
+Bibtex entry:
+@phdthesis{BiciciThesis,
+author = {Ergun Bi\c{c}ici},
+note = {Supervisor: Deniz Yuret},
+title = {The Regression Model of Machine Translation},
+year = {2011},
+school = {Ko\c{c} University},
+keywords = "Machine Translation, Machine Learning, Artificial Intelligence, Natural Language Processing",
+pdf = "http://home.ku.edu.tr/~ebicici/publications/2011/RegMTThesis_Web.pdf",
+}
